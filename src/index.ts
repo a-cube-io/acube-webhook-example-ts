@@ -3,8 +3,8 @@ import express, {Request, Response} from 'express';
 
 import axios from 'axios';
 import {
-  parseDraftRequest,
-  verifyDraftSignature
+  parseRequestSignature,
+  verifyParsedSignature
 } from "@misskey-dev/node-http-message-signatures";
 
 async function getKeyId(): Promise<string> {
@@ -15,9 +15,9 @@ async function getKeyId(): Promise<string> {
 async function verifyHttpSignature(request: Request): Promise<boolean> {
   const publicKey = await getKeyId(); // Ideally, cache or retrieve more efficiently
   try {
-    let parsedSignature = parseDraftRequest(request);
+    let parsedSignature = parseRequestSignature(request);
 
-    return await verifyDraftSignature(parsedSignature['value'], publicKey, (...args) => console.log(args));
+    return await verifyParsedSignature(parsedSignature, publicKey, (...args) => console.log(args));
   } catch (error) {
     console.error(error);
     return false;
@@ -30,7 +30,7 @@ app.post('/my_webhook', async (req: Request, res: Response) => {
   if (!await verifyHttpSignature(req)) {
     return res.status(401).send({message: 'Invalid http signature'});
   }
-
+  console.log('Valid signature received');
   res.send({message: 'Done'});
 });
 
