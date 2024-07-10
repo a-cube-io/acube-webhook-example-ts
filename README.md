@@ -1,4 +1,4 @@
-# Example of a webhook serever written in Typescrupt
+# Example of a A-CUBE webhook server written in Typescript
 
 This project is a sample implementation of a webhook that [checks the validity of A-Cube signature](https://docs.acubeapi.com/documentation/common/http-signature/#python).
 
